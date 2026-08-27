@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>FlatTire | Scan Dashboard</title>
+
+    <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+
+<body>
+
+<header class="topbar">
+    <a href="/" class="brand">
+        FlatTire
+    </a>
+
+    <span class="page-label">
+        Dependency Scan
+    </span>
+</header>
+
+<main class="dashboard">
+
+    <section class="dashboard-header">
+        <div>
+            <p class="eyebrow">PROJECT SECURITY</p>
+
+            <h1>Scan Dashboard</h1>
+
+            <p class="subtitle">
+                Review the latest dependency vulnerability scan.
+            </p>
+        </div>
+
+        <button id="refreshScanButton">
+            Check Again
+        </button>
+    </section>
+
+
+    <!-- Loading -->
+
+    <section id="loadingState" class="status-card">
+        <div class="status-icon">↻</div>
+
+        <div>
+            <h2>Checking scan report...</h2>
+            <p>Looking for the latest FlatTire dependency scan.</p>
+        </div>
+    </section>
+
+
+    <!-- No report -->
+
+    <section id="missingState"
+             class="status-card missing hidden">
+
+        <div class="status-icon">!</div>
+
+        <div>
+            <h2>No scan report found</h2>
+
+            <p>
+                FlatTire could not find a Dependency-Check report
+                for this project.
+            </p>
+
+            <div class="command-box">
+                <code>mvn clean verify</code>
+            </div>
+
+            <p class="hint">
+                Run the command from your project directory,
+                then click Check Again.
+            </p>
+        </div>
+
+    </section>
+
+
+    <!-- Report available -->
+
+    <section id="availableState"
+             class="status-card available hidden">
+
+        <div class="status-icon">✓</div>
+
+        <div class="status-content">
+
+            <div class="status-heading">
+                <div>
+                    <h2>Scan report detected</h2>
+
+                    <p>
+                        FlatTire found a Dependency-Check report
+                        and is ready to analyze it.
+                    </p>
+                </div>
+
+                <span class="ready-badge">
+                    READY
+                </span>
+            </div>
+
+            <div class="scan-info">
+
+                <div class="info-item">
+                    <span>Report</span>
+                    <strong id="reportPath">—</strong>
+                </div>
+
+                <div class="info-item">
+                    <span>Last Scan</span>
+                    <strong id="lastModified">—</strong>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+<script src="/js/scan-dashboard.js"></script>
+
+</body>
+</html>

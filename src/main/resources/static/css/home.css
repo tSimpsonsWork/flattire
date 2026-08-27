@@ -413,4 +413,21 @@ body {
         padding: 18px;
     }
 
+    //dashboard
+.dashboard-link {
+    display: inline-block;
+    padding: 12px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    background: #20262e;
+    color: #ffffff;
+    transition: 0.2s ease;
+}
+
+    .dashboard-link:hover {
+        transform: translateY(-2px);
+        background: #303842;
+    }
+
 }
