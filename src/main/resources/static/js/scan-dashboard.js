@@ -1,12 +1,28 @@
-const loadingState = document.getElementById("loadingState");
-const missingState = document.getElementById("missingState");
-const availableState = document.getElementById("availableState");
+const loadingState =
+    document.getElementById("loadingState");
 
-const reportPath = document.getElementById("reportPath");
-const lastModified = document.getElementById("lastModified");
+const missingState =
+    document.getElementById("missingState");
+
+const availableState =
+    document.getElementById("availableState");
+
+
+const reportPath =
+    document.getElementById("reportPath");
+
+const lastModified =
+    document.getElementById("lastModified");
+
 
 const refreshButton =
     document.getElementById("refreshScanButton");
+
+
+refreshButton.addEventListener(
+    "click",
+    checkScanStatus
+);
 
 
 async function checkScanStatus() {
@@ -16,19 +32,29 @@ async function checkScanStatus() {
     try {
 
         const response =
-            await fetch("/flattire/api/scan/status");
+            await fetch(
+                "/flattire/api/scan/status"
+            );
+
 
         if (!response.ok) {
+
             throw new Error(
                 `Request failed: ${response.status}`
             );
         }
 
-        const scan = await response.json();
+
+        const scan =
+            await response.json();
+
 
         if (scan.reportAvailable) {
+
             showAvailable(scan);
+
         } else {
+
             showMissing();
         }
 
@@ -39,6 +65,7 @@ async function checkScanStatus() {
             error
         );
 
+
         showMissing();
     }
 }
@@ -46,28 +73,60 @@ async function checkScanStatus() {
 
 function showLoading() {
 
-    loadingState.classList.remove("hidden");
-    missingState.classList.add("hidden");
-    availableState.classList.add("hidden");
+    loadingState
+        .classList
+        .remove("hidden");
+
+
+    missingState
+        .classList
+        .add("hidden");
+
+
+    availableState
+        .classList
+        .add("hidden");
 }
 
 
 function showMissing() {
 
-    loadingState.classList.add("hidden");
-    missingState.classList.remove("hidden");
-    availableState.classList.add("hidden");
+    loadingState
+        .classList
+        .add("hidden");
+
+
+    missingState
+        .classList
+        .remove("hidden");
+
+
+    availableState
+        .classList
+        .add("hidden");
 }
 
 
 function showAvailable(scan) {
 
-    loadingState.classList.add("hidden");
-    missingState.classList.add("hidden");
-    availableState.classList.remove("hidden");
+    loadingState
+        .classList
+        .add("hidden");
+
+
+    missingState
+        .classList
+        .add("hidden");
+
+
+    availableState
+        .classList
+        .remove("hidden");
+
 
     reportPath.textContent =
         scan.reportPath ?? "Unknown";
+
 
     lastModified.textContent =
         formatDate(scan.lastModified);
@@ -80,14 +139,10 @@ function formatDate(date) {
         return "Unknown";
     }
 
-    return new Date(date).toLocaleString();
+
+    return new Date(date)
+        .toLocaleString();
 }
-
-
-refreshButton.addEventListener(
-    "click",
-    checkScanStatus
-);
 
 
 checkScanStatus();
