@@ -1,5 +1,6 @@
 :root {
     --background: #0b1120;
+
     --surface: #111827;
     --surface-raised: #182235;
     --surface-hover: #202c42;
@@ -19,11 +20,22 @@
     --danger: #fb7185;
 }
 
+
+/* =========================================================
+   GLOBAL
+   ========================================================= */
+
 * {
     box-sizing: border-box;
 }
 
+html {
+    min-height: 100%;
+}
+
 body {
+    min-height: 100vh;
+
     margin: 0;
 
     font-family:
@@ -41,14 +53,16 @@ body {
             );
 
     color: var(--text-primary);
-
-    min-height: 100vh;
 }
 
 
-/* HEADER */
+/* =========================================================
+   HEADER
+   ========================================================= */
 
 .site-header {
+    width: 100%;
+
     background: rgba(11, 17, 32, 0.85);
 
     border-bottom: 1px solid var(--border);
@@ -59,16 +73,33 @@ body {
 .header-content {
     max-width: 1100px;
 
+    min-height: 68px;
+
     margin: 0 auto;
 
-    padding: 18px 28px;
+    padding: 0 28px;
 
     display: flex;
     align-items: center;
     justify-content: space-between;
+
+    gap: 24px;
 }
 
-.brand {
+
+/* =========================================================
+   BRAND
+   ========================================================= */
+
+.brand,
+.brand:visited {
+    display: flex;
+    align-items: center;
+
+    color: var(--text-primary);
+
+    text-decoration: none;
+
     font-size: 22px;
     font-weight: 800;
 
@@ -76,39 +107,111 @@ body {
 }
 
 .brand::before {
-    content: "●";
+    content: "";
 
-    color: var(--accent);
+    width: 19px;
+    height: 19px;
 
-    margin-right: 9px;
+    margin-right: 13px;
+
+    flex-shrink: 0;
+
+    background: var(--accent);
+
+    border-radius: 50%;
 }
 
-.tagline {
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+
+.topnav {
+    display: flex;
+    align-items: center;
+
+    gap: 6px;
+}
+
+.topnav .nav-link,
+.topnav .nav-link:visited {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 10px 14px;
+
+    border-radius: 7px;
+
     color: var(--text-secondary);
 
-    font-size: 13px;
+    text-decoration: none;
+
+    font-size: 14px;
+    font-weight: 650;
+
+    white-space: nowrap;
+
+    transition:
+            background 0.15s ease,
+            color 0.15s ease;
+}
+
+.topnav .nav-link:hover {
+    background: rgba(32, 44, 66, 0.55);
+
+    color: var(--text-primary);
+
+    text-decoration: none;
+}
+
+.topnav .nav-link.active,
+.topnav .nav-link.active:visited {
+    background: var(--surface-hover);
+
+    color: var(--text-primary);
+
+    text-decoration: none;
 }
 
 
-/* PAGE */
+/* =========================================================
+   PAGE
+   ========================================================= */
 
 .container {
     max-width: 1100px;
 
     margin: 0 auto;
 
-    padding: 72px 28px;
+    padding: 92px 28px;
 }
 
 
-/* HERO */
+/* =========================================================
+   HERO
+   ========================================================= */
 
 .hero {
     max-width: 760px;
 }
 
+.eyebrow {
+    margin: 0 0 14px;
+
+    color: var(--text-secondary);
+
+    font-size: 13px;
+    font-weight: 800;
+
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
 .hero h1 {
     margin: 0;
+
+    color: var(--text-primary);
 
     font-size: 46px;
     line-height: 1.08;
@@ -129,7 +232,9 @@ body {
 }
 
 
-/* SEARCH */
+/* =========================================================
+   SEARCH
+   ========================================================= */
 
 .search-container {
     margin-top: 34px;
@@ -137,6 +242,7 @@ body {
     padding: 7px;
 
     display: flex;
+
     gap: 8px;
 
     background: var(--surface);
@@ -159,6 +265,7 @@ body {
 
     color: var(--text-primary);
 
+    font-family: inherit;
     font-size: 16px;
 
     outline: none;
@@ -178,19 +285,26 @@ body {
 
     color: #082f49;
 
+    font-family: inherit;
     font-weight: 700;
 
     cursor: pointer;
 
-    transition: 0.15s ease;
+    transition:
+            background 0.15s ease,
+            transform 0.15s ease;
 }
 
 .search-container button:hover {
     background: var(--accent-hover);
+
+    transform: translateY(-1px);
 }
 
 
-/* SECTION */
+/* =========================================================
+   RESULT SECTIONS
+   ========================================================= */
 
 .results-section,
 .versions-section {
@@ -222,6 +336,8 @@ body {
 .section-header h2 {
     margin: 0;
 
+    color: var(--text-primary);
+
     font-size: 24px;
 }
 
@@ -232,12 +348,14 @@ body {
 }
 
 
-/* SEARCH RESULT */
+/* =========================================================
+   SEARCH RESULTS
+   ========================================================= */
 
 .result-card {
-    padding: 18px;
-
     margin-top: 10px;
+
+    padding: 18px;
 
     background: var(--surface-raised);
 
@@ -261,6 +379,8 @@ body {
 }
 
 .artifact-name {
+    color: var(--text-primary);
+
     font-family:
             "SFMono-Regular",
             Consolas,
@@ -278,13 +398,15 @@ body {
 }
 
 
-/* VERSIONS */
+/* =========================================================
+   VERSIONS
+   ========================================================= */
 
 .version-grid {
     display: grid;
 
     grid-template-columns:
-        repeat(auto-fill, minmax(145px, 1fr));
+            repeat(auto-fill, minmax(145px, 1fr));
 
     gap: 11px;
 
@@ -327,7 +449,9 @@ body {
 }
 
 
-/* eventually used by NVD */
+/* =========================================================
+   FUTURE SECURITY STATES
+   ========================================================= */
 
 .version-card.clean {
     border-left: 3px solid var(--healthy);
@@ -342,7 +466,9 @@ body {
 }
 
 
-/* SECONDARY BUTTON */
+/* =========================================================
+   SECONDARY BUTTON
+   ========================================================= */
 
 .secondary-button {
     margin-top: 24px;
@@ -357,6 +483,11 @@ body {
     border-radius: 8px;
 
     cursor: pointer;
+
+    transition:
+            color 0.15s ease,
+            background 0.15s ease,
+            border-color 0.15s ease;
 }
 
 .secondary-button:hover {
@@ -368,7 +499,9 @@ body {
 }
 
 
-/* STATUS */
+/* =========================================================
+   STATUS
+   ========================================================= */
 
 .status {
     min-height: 20px;
@@ -381,23 +514,46 @@ body {
 }
 
 
+/* =========================================================
+   UTILITIES
+   ========================================================= */
+
 .hidden {
     display: none;
 }
 
 
-@media (max-width: 650px) {
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .header-content {
+        min-height: auto;
+
+        padding: 14px 18px;
+
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .topnav {
+        width: 100%;
+    }
+
+    .topnav .nav-link {
+        flex: 1;
+
+        text-align: center;
+    }
 
     .container {
-        padding: 45px 18px;
+        padding: 55px 18px;
     }
 
     .hero h1 {
         font-size: 35px;
-    }
-
-    .tagline {
-        display: none;
     }
 
     .search-container {
@@ -412,5 +568,4 @@ body {
     .versions-section {
         padding: 18px;
     }
-
 }

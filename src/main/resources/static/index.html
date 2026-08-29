@@ -5,109 +5,207 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>FlatTire</title>
+    <title>FlatTire | Scan Dashboard</title>
 
-    <link rel="stylesheet" href="/css/home.css">
+    <link rel="stylesheet" href="/css/dashboard.css?v=2">
 </head>
 
 <body>
 
 <header class="site-header">
-    <div class="header-content">
-        <div class="brand">FlatTire</div>
 
-        <div class="tagline">
-            Java dependency intelligence
-        </div>
+    <div class="header-content">
+
+        <a href="/" class="brand">
+            FlatTire
+        </a>
+
+        <nav class="topnav">
+
+            <a href="/" class="nav-link active">
+                Project Scan
+            </a>
+
+            <a href="/search.html" class="nav-link">
+                Dependency Search
+            </a>
+
+        </nav>
+
     </div>
+
 </header>
 
 
-<main class="container">
+<main class="dashboard">
 
-    <section class="hero">
+    <section class="dashboard-header">
 
-        <h1>Know your dependency before you ship it.</h1>
+        <div>
 
-        <p>
-            Search Maven Central, explore available versions,
-            and eventually see known security vulnerabilities.
-        </p>
+            <p class="eyebrow">
+                PROJECT SECURITY
+            </p>
 
-        <div class="search-container">
+            <h1>
+                Scan Dashboard
+            </h1>
 
-            <input
-                    id="searchInput"
-                    type="text"
-                    placeholder="Search Maven dependencies..."
-                    autocomplete="off"
-            >
-
-            <button
-                    id="searchButton"
-                    type="button">
-                Search
-            </button>
+            <p class="subtitle">
+                Review the latest dependency vulnerability scan.
+            </p>
 
         </div>
 
-        <div id="status" class="status"></div>
+
+        <button
+                id="refreshScanButton"
+                type="button">
+            Refresh Report
+        </button>
 
     </section>
 
 
-    <section
-            id="searchSection"
-            class="results-section hidden">
+    <!-- Loading State -->
 
-        <div class="section-header">
-            <h2>Search Results</h2>
+    <section
+            id="loadingState"
+            class="status-card">
+
+        <div class="status-icon">
+            ↻
         </div>
 
-        <div id="searchResults"></div>
+        <div>
+
+            <h2>
+                Checking scan report...
+            </h2>
+
+            <p>
+                Looking for the latest FlatTire dependency scan.
+            </p>
+
+        </div>
 
     </section>
 
 
+    <!-- Missing Report State -->
+
     <section
-            id="versionSection"
-            class="versions-section hidden">
+            id="missingState"
+            class="status-card missing hidden">
 
-        <div class="section-header">
+        <div class="status-icon">
+            !
+        </div>
 
-            <div>
-                <div class="section-label">
-                    Dependency
+        <div>
+
+            <h2>
+                No scan report found
+            </h2>
+
+            <p>
+                FlatTire could not find a Dependency-Check report
+                for this project.
+            </p>
+
+
+            <div class="command-box">
+
+                <code>
+                    mvn clean verify
+                </code>
+
+            </div>
+
+
+            <p class="hint">
+                Run the command from your project directory,
+                then click Refresh Report.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- Available Report State -->
+
+    <section
+            id="availableState"
+            class="status-card available hidden">
+
+        <div class="status-icon">
+            ✓
+        </div>
+
+
+        <div class="status-content">
+
+            <div class="status-heading">
+
+                <div>
+
+                    <h2>
+                        Scan report detected
+                    </h2>
+
+                    <p>
+                        FlatTire found a Dependency-Check report
+                        and is ready to analyze it.
+                    </p>
+
                 </div>
 
-                <h2 id="selectedArtifact"></h2>
 
-                <div
-                        id="versionCount"
-                        class="version-count">
+                <span class="ready-badge">
+                    READY
+                </span>
+
+            </div>
+
+
+            <div class="scan-info">
+
+                <div class="info-item">
+
+                    <span>
+                        Report
+                    </span>
+
+                    <strong id="reportPath">
+                        —
+                    </strong>
+
                 </div>
+
+
+                <div class="info-item">
+
+                    <span>
+                        Last Scan
+                    </span>
+
+                    <strong id="lastModified">
+                        —
+                    </strong>
+
+                </div>
+
             </div>
 
         </div>
-
-        <div
-                id="versionResults"
-                class="version-grid">
-        </div>
-
-        <button
-                id="showAllButton"
-                class="secondary-button hidden"
-                type="button">
-            Show all versions
-        </button>
 
     </section>
 
 </main>
 
 
-<script src="/js/dependency-search.js"></script>
+<script src="/js/scan-dashboard.js"></script>
 
 </body>
 
