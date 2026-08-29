@@ -35,7 +35,6 @@ html {
 
 body {
     min-height: 100vh;
-
     margin: 0;
 
     font-family:
@@ -72,11 +71,9 @@ body {
 
 .header-content {
     max-width: 1100px;
-
     min-height: 68px;
 
     margin: 0 auto;
-
     padding: 0 28px;
 
     display: flex;
@@ -459,11 +456,437 @@ button:hover {
 
 
 /* =========================================================
+   SCAN SUMMARY
+   ========================================================= */
+
+.summary-grid {
+    display: grid;
+
+    grid-template-columns:
+            repeat(4, minmax(0, 1fr));
+
+    gap: 16px;
+
+    margin-top: 22px;
+}
+
+.summary-card {
+    min-height: 125px;
+
+    padding: 22px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    background: rgba(17, 24, 39, 0.82);
+
+    border: 1px solid var(--border);
+    border-radius: 14px;
+
+    box-shadow:
+            0 18px 45px rgba(0, 0, 0, 0.15);
+}
+
+.summary-label {
+    display: block;
+
+    color: var(--text-muted);
+
+    font-size: 11px;
+    font-weight: 800;
+
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+.summary-value {
+    display: block;
+
+    margin-top: 16px;
+
+    color: var(--text-primary);
+
+    font-size: 34px;
+    font-weight: 800;
+
+    line-height: 1;
+
+    letter-spacing: -1px;
+}
+
+
+/* =========================================================
+   SEVERITY
+   ========================================================= */
+
+.severity.none {
+    color: var(--text-secondary);
+}
+
+.severity.low {
+    color: var(--healthy);
+}
+
+.severity.medium {
+    color: var(--warning);
+}
+
+.severity.high {
+    color: var(--danger);
+}
+
+.severity.critical {
+    color: var(--danger);
+}
+
+
+/* =========================================================
+
+   VULNERABLE DEPENDENCIES
+
+   ========================================================= */
+
+.vulnerability-section {
+
+    margin-top: 28px;
+
+    padding: 28px;
+
+    background: rgba(17, 24, 39, 0.82);
+
+    border: 1px solid var(--border);
+
+    border-radius: 16px;
+
+    box-shadow:
+
+            0 25px 60px rgba(0, 0, 0, 0.18);
+
+}
+
+.section-header {
+
+    margin-bottom: 24px;
+
+}
+
+.section-eyebrow {
+
+    margin: 0 0 8px;
+
+    color: var(--danger);
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    text-transform: uppercase;
+
+    letter-spacing: 1.2px;
+
+}
+
+.section-header h2 {
+
+    margin: 0;
+
+    color: var(--text-primary);
+
+    font-size: 24px;
+
+}
+
+.section-header p {
+
+    margin: 8px 0 0;
+
+    color: var(--text-secondary);
+
+    line-height: 1.6;
+
+}
+
+.vulnerability-list {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 16px;
+
+}
+
+.vulnerability-card {
+
+    padding: 20px;
+
+    background: rgba(11, 17, 32, 0.72);
+
+    border: 1px solid var(--border);
+
+    border-radius: 12px;
+
+}
+
+.vulnerability-card-header {
+
+    display: flex;
+
+    align-items: flex-start;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+}
+
+.dependency-name {
+
+    margin: 0;
+
+    color: var(--text-primary);
+
+    font-family:
+
+            "SFMono-Regular",
+
+            Consolas,
+
+            monospace;
+
+    font-size: 15px;
+
+    font-weight: 700;
+
+    word-break: break-word;
+
+}
+
+.vulnerability-meta {
+
+    margin-top: 8px;
+
+    color: var(--text-secondary);
+
+    font-size: 13px;
+
+}
+
+.severity-badge {
+
+    flex-shrink: 0;
+
+    padding: 6px 10px;
+
+    border-radius: 6px;
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    letter-spacing: 0.7px;
+
+}
+
+.severity-badge.low {
+
+    color: var(--healthy);
+
+    background: rgba(52, 211, 153, 0.1);
+
+    border: 1px solid rgba(52, 211, 153, 0.2);
+
+}
+
+.severity-badge.medium {
+
+    color: var(--warning);
+
+    background: rgba(251, 191, 36, 0.1);
+
+    border: 1px solid rgba(251, 191, 36, 0.2);
+
+}
+
+.severity-badge.high,
+
+.severity-badge.critical {
+
+    color: var(--danger);
+
+    background: rgba(251, 113, 133, 0.1);
+
+    border: 1px solid rgba(251, 113, 133, 0.2);
+
+}
+
+.cve-list {
+
+    margin-top: 18px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 9px;
+
+}
+
+.cve-row {
+
+    display: grid;
+
+    grid-template-columns:
+
+            minmax(150px, 1fr)
+
+            100px
+
+            70px;
+
+    gap: 16px;
+
+    align-items: center;
+
+    padding: 11px 13px;
+
+    background: var(--surface-raised);
+
+    border: 1px solid var(--border);
+
+    border-radius: 8px;
+
+}
+
+.cve-name {
+
+    color: var(--text-primary);
+
+    font-family:
+
+            "SFMono-Regular",
+
+            Consolas,
+
+            monospace;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+}
+
+.cve-severity {
+
+    color: var(--text-secondary);
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+}
+
+.cve-score {
+
+    color: var(--text-primary);
+
+    font-size: 13px;
+
+    font-weight: 800;
+
+    text-align: right;
+
+}
+
+.more-vulnerabilities {
+
+    margin-top: 12px;
+
+    color: var(--text-secondary);
+
+    font-size: 13px;
+
+}
+
+.details-button {
+
+    margin-top: 16px;
+
+}
+
+/* =========================================================
+
+   VULNERABILITY DETAILS
+
+   ========================================================= */
+
+.vulnerability-details {
+
+    margin-top: 18px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 14px;
+
+}
+
+.vulnerability-detail {
+
+    padding: 16px;
+
+    background: rgba(11, 17, 32, 0.88);
+
+    border: 1px solid var(--border);
+
+    border-radius: 9px;
+
+}
+
+.vulnerability-detail strong {
+
+    color: var(--text-primary);
+
+    font-size: 13px;
+
+}
+
+.vulnerability-detail p {
+
+    margin: 9px 0 0;
+
+    color: var(--text-secondary);
+
+    font-size: 13px;
+
+    line-height: 1.65;
+
+    white-space: pre-line;
+
+}
+
+
+/* =========================================================
    UTILITIES
    ========================================================= */
 
 .hidden {
     display: none;
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 850px) {
+
+    .summary-grid {
+        grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+    }
 }
 
 
@@ -514,6 +937,38 @@ button:hover {
     }
 
     .scan-info {
+        grid-template-columns: 1fr;
+    }
+
+    .cve-row {
+
+        grid-template-columns: 1fr;
+
+        gap: 6px;
+
+    }
+
+    .cve-score {
+
+        text-align: left;
+
+    }
+
+    .vulnerability-card-header {
+
+        flex-direction: column;
+
+    }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 500px) {
+
+    .summary-grid {
         grid-template-columns: 1fr;
     }
 }

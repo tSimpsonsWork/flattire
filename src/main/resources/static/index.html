@@ -7,7 +7,7 @@
 
     <title>FlatTire | Scan Dashboard</title>
 
-    <link rel="stylesheet" href="/css/dashboard.css?v=2">
+    <link rel="stylesheet" href="/css/dashboard.css?v=5">
 </head>
 
 <body>
@@ -36,6 +36,7 @@
 
 </header>
 
+</header>
 
 <main class="dashboard">
 
@@ -198,6 +199,126 @@
 
             </div>
 
+
+            <p class="hint">
+                Run the command from your project directory,
+                then click Refresh Report.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- Scan Summary -->
+
+    <section
+            id="summarySection"
+            class="summary-grid hidden">
+
+        <article class="summary-card">
+
+            <span class="summary-label">
+                Dependencies
+            </span>
+
+            <strong
+                    id="totalDependencies"
+                    class="summary-value">
+                —
+            </strong>
+
+        </article>
+
+
+        <article class="summary-card">
+
+            <span class="summary-label">
+                Vulnerable Dependencies
+            </span>
+
+            <strong
+                    id="vulnerableDependencies"
+                    class="summary-value">
+                —
+            </strong>
+
+        </article>
+
+
+        <article class="summary-card">
+
+            <span class="summary-label">
+                Known CVEs
+            </span>
+
+            <strong
+                    id="knownCves"
+                    class="summary-value">
+                —
+            </strong>
+
+        </article>
+
+
+        <article class="summary-card">
+
+            <span class="summary-label">
+                Highest Severity
+            </span>
+
+            <strong
+                    id="highestSeverity"
+                    class="summary-value severity">
+                —
+            </strong>
+
+        </article>
+
+    </section>
+
+    <!-- Vulnerable Dependencies -->
+
+    <section
+
+            id="vulnerabilitySection"
+
+            class="vulnerability-section hidden">
+
+        <div class="section-header">
+
+            <div>
+
+                <p class="section-eyebrow">
+
+                    REQUIRES ATTENTION
+
+                </p>
+
+                <h2>
+
+                    Vulnerable Dependencies
+
+                </h2>
+
+                <p>
+
+                    Dependencies with known vulnerabilities detected
+
+                    in the latest scan.
+
+                </p>
+
+            </div>
+
+        </div>
+
+        <div
+
+                id="vulnerabilityResults"
+
+                class="vulnerability-list">
+
         </div>
 
     </section>
@@ -205,7 +326,7 @@
 </main>
 
 
-<script src="/js/scan-dashboard.js"></script>
+<script src="/js/scan-dashboard.js?v=5"></script>
 
 </body>
 

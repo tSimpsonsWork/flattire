@@ -1,7 +1,7 @@
 package com.stampede.flattire.service;
 
-import com.stampede.flattire.dto.MavenSearchResult;
-import com.stampede.flattire.dto.MavenVersionResult;
+import com.stampede.flattire.dto.results.MavenSearchResult;
+import com.stampede.flattire.dto.results.MavenVersionResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
