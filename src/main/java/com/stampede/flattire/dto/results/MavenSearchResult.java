@@ -1,4 +1,4 @@
-package com.stampede.flattire.dto;
+package com.stampede.flattire.dto.results;
 
 public record MavenSearchResult(
         String groupId,

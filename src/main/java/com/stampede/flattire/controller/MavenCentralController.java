@@ -1,7 +1,7 @@
 package com.stampede.flattire.controller;
 
-import com.stampede.flattire.dto.MavenSearchResult;
-import com.stampede.flattire.dto.MavenVersionResult;
+import com.stampede.flattire.dto.results.MavenSearchResult;
+import com.stampede.flattire.dto.results.MavenVersionResult;
 import com.stampede.flattire.service.MavenCentralService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
