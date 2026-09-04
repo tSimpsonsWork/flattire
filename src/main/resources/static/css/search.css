@@ -321,6 +321,10 @@ body {
             0 25px 60px rgba(0, 0, 0, 0.18);
 }
 
+.results-section {
+    max-width: 760px;
+}
+
 .section-label {
     margin-bottom: 7px;
 
@@ -341,6 +345,23 @@ body {
     font-size: 24px;
 }
 
+.search-results-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+}
+
+.search-result-count {
+    color: var(--text-secondary);
+
+    font-size: 13px;
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
 .version-count {
     margin-top: 8px;
 
@@ -352,8 +373,36 @@ body {
    SEARCH RESULTS
    ========================================================= */
 
+.search-results-list {
+    max-height: 420px;
+
+    margin-top: 14px;
+    padding-right: 8px;
+
+    overflow-y: auto;
+    scrollbar-gutter: stable;
+}
+
+.search-results-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.search-results-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.search-results-list::-webkit-scrollbar-thumb {
+    background: var(--border-hover);
+
+    border-radius: 999px;
+}
+
+.search-results-list::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
+}
+
 .result-card {
-    margin-top: 10px;
+    margin-bottom: 10px;
 
     padding: 18px;
 
@@ -376,6 +425,19 @@ body {
     background: var(--surface-hover);
 
     border-color: var(--border-hover);
+}
+
+.result-card.selected {
+    padding-top: 12px;
+    padding-bottom: 12px;
+
+    background: var(--surface-hover);
+
+    border-color: var(--accent);
+}
+
+.result-card.selected .latest-version {
+    display: none;
 }
 
 .artifact-name {
@@ -567,5 +629,17 @@ body {
     .results-section,
     .versions-section {
         padding: 18px;
+    }
+
+    .results-section {
+        max-width: none;
+    }
+
+    .search-results-header {
+        align-items: flex-start;
+    }
+
+    .search-results-list {
+        max-height: 390px;
     }
 }

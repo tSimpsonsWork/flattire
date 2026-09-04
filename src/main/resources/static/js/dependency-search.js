@@ -1,7 +1,10 @@
 const DEFAULT_VERSION_LIMIT = 50;
+const COLLAPSED_VERSION_LIMIT = 8;
 
 
 let allVersions = [];
+let selectedResultCard = null;
+let showingAllVersions = false;
 
 
 const searchInput =
@@ -22,6 +25,10 @@ const searchSection =
 
 const searchResults =
     document.getElementById("searchResults");
+
+
+const searchResultCount =
+    document.getElementById("searchResultCount");
 
 
 const versionSection =
@@ -65,7 +72,7 @@ searchInput.addEventListener(
 
 showAllButton.addEventListener(
     "click",
-    showAllVersions
+    toggleAllVersions
 );
 
 
@@ -98,6 +105,11 @@ async function searchDependencies() {
     versionSection
         .classList
         .add("hidden");
+
+
+    selectedResultCard = null;
+    showingAllVersions = false;
+    allVersions = [];
 
 
     try {
@@ -140,6 +152,10 @@ async function searchDependencies() {
 function renderSearchResults(results) {
 
     searchResults.innerHTML = "";
+
+
+    searchResultCount.textContent =
+        `${results.length} ${results.length === 1 ? "result" : "results"}`;
 
 
     searchSection
@@ -197,7 +213,8 @@ function renderSearchResults(results) {
 
         card.addEventListener(
             "click",
-            () => loadVersions(
+            () => toggleVersions(
+                card,
                 result.groupId,
                 result.artifactId
             )
@@ -209,10 +226,62 @@ function renderSearchResults(results) {
 }
 
 
+function toggleVersions(
+    card,
+    groupId,
+    artifactId
+) {
+
+    if (selectedResultCard === card) {
+
+        card.classList.remove("selected");
+
+        selectedResultCard = null;
+        showingAllVersions = false;
+        allVersions = [];
+
+        versionSection
+            .classList
+            .add("hidden");
+
+        showAllButton
+            .classList
+            .add("hidden");
+
+        showAllButton.textContent =
+            "Show All Versions";
+
+        return;
+    }
+
+
+    if (selectedResultCard) {
+
+        selectedResultCard
+            .classList
+            .remove("selected");
+    }
+
+
+    selectedResultCard = card;
+
+    card.classList.add("selected");
+
+
+    loadVersions(
+        groupId,
+        artifactId
+    );
+}
+
+
 async function loadVersions(
     groupId,
     artifactId
 ) {
+
+    showingAllVersions = false;
+
 
     setStatus(
         "Loading versions..."
@@ -254,7 +323,7 @@ async function loadVersions(
         renderVersions(
             allVersions.slice(
                 0,
-                DEFAULT_VERSION_LIMIT
+                COLLAPSED_VERSION_LIMIT
             )
         );
 
@@ -266,12 +335,15 @@ async function loadVersions(
 
         if (
             allVersions.length >
-            DEFAULT_VERSION_LIMIT
+            COLLAPSED_VERSION_LIMIT
         ) {
 
             showAllButton
                 .classList
                 .remove("hidden");
+
+            showAllButton.textContent =
+                "Show All Versions";
 
         } else {
 
@@ -283,10 +355,6 @@ async function loadVersions(
 
         setStatus("");
 
-
-        versionSection.scrollIntoView({
-            behavior: "smooth"
-        });
 
     } catch (error) {
 
@@ -324,16 +392,36 @@ function renderVersions(versions) {
 }
 
 
-function showAllVersions() {
+function toggleAllVersions() {
+
+    showingAllVersions =
+        !showingAllVersions;
+
+
+    if (showingAllVersions) {
+
+        renderVersions(
+            allVersions
+        );
+
+
+        showAllButton.textContent =
+            "Collapse Versions";
+
+        return;
+    }
+
 
     renderVersions(
-        allVersions
+        allVersions.slice(
+            0,
+            COLLAPSED_VERSION_LIMIT
+        )
     );
 
 
-    showAllButton
-        .classList
-        .add("hidden");
+    showAllButton.textContent =
+        "Show All Versions";
 }
 
 
