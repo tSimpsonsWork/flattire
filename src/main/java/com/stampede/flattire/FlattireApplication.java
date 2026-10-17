@@ -3,18 +3,9 @@ package com.stampede.flattire;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
+import tools.jackson.databind.ObjectMapper;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Queue;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -27,7 +18,8 @@ public class FlattireApplication {
     public static void main(String[] args) {
         ConfigurableApplicationContext context = SpringApplication.run(FlattireApplication.class, args);
 
-        // IntelliJ Program arguments: --lesson=fundamentals, --lesson=modern, or --lesson=spring.
+        // IntelliJ Program arguments: --lesson=fundamentals, --lesson=modern,
+        // --lesson=compare, or --lesson=spring.
         // With no selection, run every teaching section as before.
         String selectedLesson = "all";
         for (String arg : args) {
@@ -39,6 +31,7 @@ public class FlattireApplication {
         switch (selectedLesson) {
             case "fundamentals" -> runFundamentals();
             case "modern" -> runModernJava();
+            case "compare" -> showTraditionalVsModern();
             case "spring" -> runSpringConcepts(context);
             case "all" -> {
                 runFundamentals();
@@ -46,7 +39,7 @@ public class FlattireApplication {
                 runSpringConcepts(context);
             }
             default -> System.out.println("Unknown --lesson value: " + selectedLesson
-                    + ". Choose fundamentals, modern, spring, or all.");
+                    + ". Choose fundamentals, modern, compare, spring, or all.");
         }
     }
 
@@ -56,6 +49,7 @@ public class FlattireApplication {
         showMethods();
         showControlFlow();
         showObjectsAndInterfaces();
+        showModifiersAndStaticMemory();
         showCollections();
         showEnums();
         showExceptions();
@@ -69,6 +63,7 @@ public class FlattireApplication {
         showOptionals();
         showStreams();
         showRecords();
+        showTraditionalVsModern();
     }
 
     private static void runSpringConcepts(ConfigurableApplicationContext context) {
@@ -78,6 +73,7 @@ public class FlattireApplication {
         System.out.println("context.getBean(FlattireApplication.class) -> managed bean exists: "
                 + (context.getBean(FlattireApplication.class) != null));
         System.out.println("Maven reads pom.xml at build time; Spring creates beans at application startup.");
+        showDtoJson(context.getBean(ObjectMapper.class));
         showLogging();
     }
 
@@ -180,6 +176,61 @@ public class FlattireApplication {
         formatter = new CasualGreeting();
         System.out.println("CasualGreeting.format(dto) -> String -> " + formatter.format(dto));
         System.out.println("The interface variable stays the same; the implementation changes the result.");
+    }
+
+    private static void showModifiersAndStaticMemory() {
+        System.out.println("\n+---------------- ACCESS, FINAL, STATIC, MEMORY ----------------+");
+        VisibilityExample example = new VisibilityExample("Ada");
+        VisibilityChild child = new VisibilityChild("Bea");
+        System.out.println("private String name -> only VisibilityExample accesses the field directly");
+        System.out.println("public publicName() -> String -> " + example.publicName());
+        System.out.println("protected role() -> String -> subclass override returns " + child.role());
+        System.out.println("no modifier: packageHint() -> String -> " + example.packageHint());
+        System.out.println("public = broad API | protected = package + subclasses | no modifier = package | private = class");
+        System.out.println("A public member is usable only where its enclosing type is visible.");
+
+        final List<String> topics = new ArrayList<>(List.of("Java"));
+        topics.add("Spring");
+        System.out.println("final List<String> topics -> same reference, mutable contents -> " + topics);
+        System.out.println("final variable cannot be reassigned; final does NOT make its object immutable.");
+        System.out.println("final class cannot be extended; final method cannot be overridden.");
+        System.out.println("VisibilityExample.course() -> static String shared at class level -> "
+                + VisibilityExample.course());
+        System.out.println("Each new VisibilityExample has its own name; static members belong to the class.");
+        System.out.println("static final String constant = good for a small, immutable shared value.");
+        System.out.println("DON'T execute: static final List<byte[]> CACHE = new ArrayList<>(); add forever");
+        System.out.println("Static references can retain heap objects; final does not cap a collection.");
+        System.out.println("DO: bound/evict cache entries, avoid global per-request data, measure retention after GC.");
+        System.out.println("Mutable static state is shared across threads; design concurrency rules too.");
+        System.out.println("A static method does not cause OOM; unbounded reachable data can.");
+    }
+
+    private static void showDtoJson(ObjectMapper objectMapper) {
+        System.out.println("\n+---------------- REQUEST / RESPONSE DTO AND JSON ----------------+");
+        System.out.println("DTO = Data Transfer Object: selected fields crossing a boundary.");
+        System.out.println("Client JSON -> deserialize -> TeachingStudentRequest -> map -> TeachingStudentResponse");
+        System.out.println("TeachingStudentResponse -> serialize -> JSON response body");
+        String requestJson = "{\"name\":\"Ada\",\"points\":10}";
+        System.out.println("sample request JSON String -> " + requestJson);
+        try {
+            TeachingStudentRequest request = objectMapper.readValue(requestJson, TeachingStudentRequest.class);
+            System.out.println("readValue(json, TeachingStudentRequest.class) -> TeachingStudentRequest -> " + request);
+            TeachingStudentResponse response = new TeachingStudentResponse(42L, request.name(), request.points());
+            System.out.println("map request -> response DTO (example ID, no database write) -> " + response);
+            String responseJson = objectMapper.writeValueAsString(response);
+            System.out.println("writeValueAsString(response) -> String JSON -> " + responseJson);
+            System.out.println("@RequestBody commonly deserializes request JSON; @RestController serializes returned DTO.");
+            System.out.println("Request DTO = client-allowed input; response DTO = fields intentionally exposed.");
+            try {
+                objectMapper.readValue("{broken", TeachingStudentRequest.class);
+            } catch (Exception badJson) {
+                System.out.println("Malformed JSON -> deserialization error before normal controller logic: "
+                        + badJson.getClass().getSimpleName());
+            }
+            System.out.println("Valid JSON syntax is not validation or authorization; check fields and permissions separately.");
+        } catch (Exception exception) {
+            System.out.println("JSON teaching example failed: " + exception.getClass().getSimpleName());
+        }
     }
 
     private static void showThreads() {
@@ -440,6 +491,100 @@ public class FlattireApplication {
         System.out.println("3. age >= 18 ? Adult : Minor -> String -> " + access);
     }
 
+    private static void showTraditionalVsModern() {
+        System.out.println("\n========== BEFORE / AFTER: CHOOSE THE CLEARER JAVA TOOL ==========");
+        compareLoopAndStream();
+        compareAnonymousClassAndLambda();
+        compareClassAndRecord();
+        compareNullCheckAndOptional();
+        compareIterationStyles();
+    }
+
+    private static void compareLoopAndStream() {
+        System.out.println("\n[1] LOOP vs STREAM: filter long names, then uppercase");
+        List<String> names = List.of("Ada", "Clara", "Christopher");
+        List<String> loopResult = new ArrayList<>();
+        for (String name : names) {
+            if (name.length() > 3) {
+                loopResult.add(name.toUpperCase());
+            }
+        }
+        List<String> streamResult = names.stream()
+                .filter(name -> name.length() > 3)
+                .map(String::toUpperCase)
+                .toList();
+        System.out.println("input List<String> -> " + names);
+        System.out.println("before: for + if + add -> List<String> -> " + loopResult);
+        System.out.println("after:  stream().filter(...).map(...).toList() -> List<String> -> " + streamResult);
+        System.out.println("same values? boolean -> " + loopResult.equals(streamResult));
+        System.out.println("Loop: easy break/mutation | Stream: clear pipeline; toList() result is unmodifiable.");
+    }
+
+    private static void compareAnonymousClassAndLambda() {
+        System.out.println("\n[2] ANONYMOUS CLASS vs LAMBDA: implement Runnable.run() -> void");
+        Runnable oldAction = new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("   anonymous run() printed");
+            }
+        };
+        Runnable lambdaAction = () -> {
+            System.out.println("   lambda run() printed");
+        };
+        System.out.println("before: new Runnable() { public void run() { ... } }");
+        System.out.println("after:  () -> { ... }  // target type is Runnable");
+        System.out.println("Assignment stores behavior; neither body ran until run() is called:");
+        oldAction.run();
+        lambdaAction.run();
+        System.out.println("Lambda: concise one-method behavior | Named/anonymous class: more room for structure.");
+    }
+
+    private static void compareClassAndRecord() {
+        System.out.println("\n[3] CLASS vs RECORD: two separate objects with the same data");
+        LegacyPerson oldFirst = new LegacyPerson("Ada", 36);
+        LegacyPerson oldSecond = new LegacyPerson("Ada", 36);
+        Person recordFirst = new Person("Ada", 36);
+        Person recordSecond = new Person("Ada", 36);
+        System.out.println("before: new LegacyPerson(\"Ada\", 36) -> name() String "
+                + oldFirst.name() + ", age() int " + oldFirst.age());
+        System.out.println("after:  new Person(\"Ada\", 36) -> name() String "
+                + recordFirst.name() + ", age() int " + recordFirst.age());
+        System.out.println("LegacyPerson.equals(second) -> boolean " + oldFirst.equals(oldSecond)
+                + " (Object identity: no override)");
+        System.out.println("Person.equals(second) -> boolean " + recordFirst.equals(recordSecond)
+                + " (record compares components)");
+        System.out.println("Record: value data with generated methods | Class: choose custom identity or mutation.");
+    }
+
+    private static void compareNullCheckAndOptional() {
+        System.out.println("\n[4] NULL CHECK vs OPTIONAL: missing String with a fallback");
+        String possibleName = null;
+        String oldResult = possibleName == null ? "Guest" : possibleName.toUpperCase();
+        Optional<String> maybeName = Optional.ofNullable(possibleName);
+        String optionalResult = maybeName.map(String::toUpperCase).orElse("Guest");
+        System.out.println("input String reference -> null");
+        System.out.println("before: null check + ternary -> String -> " + oldResult);
+        System.out.println("after:  ofNullable(null) -> Optional<String> -> " + maybeName);
+        System.out.println("        map(...).orElse(\"Guest\") -> String -> " + optionalResult);
+        System.out.println("Optional.empty is not false; isEmpty() -> boolean -> " + maybeName.isEmpty());
+        System.out.println("Null check: fine locally | Optional return type: makes absence explicit to callers.");
+    }
+
+    private static void compareIterationStyles() {
+        System.out.println("\n[5] INDEXED for vs ENHANCED for vs forEach");
+        List<String> steps = List.of("read", "practice");
+        System.out.println("input List<String> -> " + steps);
+        for (int index = 0; index < steps.size(); index++) {
+            System.out.println("indexed for:  int index " + index + " -> " + steps.get(index));
+        }
+        for (String step : steps) {
+            System.out.println("enhanced for: String step -> " + step);
+        }
+        steps.forEach(step -> System.out.println("forEach:      Consumer<String> -> " + step));
+        System.out.println("Indexed: position | Enhanced: item and break/continue | forEach: callback, no loop break.");
+        System.out.println("Enhanced for is Java 5; lambda/forEach is Java 8-era syntax.");
+    }
+
     // Teaching-only types: they are not Spring components or FlatTire domain objects.
     private abstract static class Learner {
         private final String name;
@@ -483,6 +628,49 @@ public class FlattireApplication {
     private record StudentDto(String name, int points) {
     }
 
+    // Teaching-only wire shapes. These are not FlatTire endpoints or persistence entities.
+    public record TeachingStudentRequest(String name, int points) {
+    }
+
+    public record TeachingStudentResponse(long id, String name, int points) {
+    }
+
+    private static class VisibilityExample {
+        private static final String COURSE = "Java";
+        private final String name;
+
+        VisibilityExample(String name) {
+            this.name = name;
+        }
+
+        public String publicName() {
+            return name;
+        }
+
+        protected String role() {
+            return "Learner";
+        }
+
+        String packageHint() {
+            return "same-package access";
+        }
+
+        public static String course() {
+            return COURSE;
+        }
+    }
+
+    private static final class VisibilityChild extends VisibilityExample {
+        VisibilityChild(String name) {
+            super(name);
+        }
+
+        @Override
+        protected String role() {
+            return "Student (using " + publicName() + ")";
+        }
+    }
+
     private interface GreetingFormatter {
         String format(StudentDto student);
     }
@@ -521,6 +709,24 @@ public class FlattireApplication {
 
         private String greeting() {
             return "Hello, my name is " + name + ".";
+        }
+    }
+
+    private static final class LegacyPerson {
+        private final String name;
+        private final int age;
+
+        LegacyPerson(String name, int age) {
+            this.name = name;
+            this.age = age;
+        }
+
+        String name() {
+            return name;
+        }
+
+        int age() {
+            return age;
         }
     }
 
