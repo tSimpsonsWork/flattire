@@ -32,7 +32,5 @@ public class ScanReportController {
 
     //http://localhost:8080/flattire/api/scan/vulnerabilities
     @GetMapping("/vulnerabilities")
-    public List<VulnerableDependencyResponse> getVulnerabilities() {
-        return scanReportService.getVulnerableDependencies();
-    }
+    public List<VulnerableDependencyResponse> getVulnerabilities() {return scanReportService.getVulnerableDependencies();}
 }
