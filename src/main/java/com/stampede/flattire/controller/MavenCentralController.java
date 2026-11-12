@@ -26,10 +26,5 @@ public class MavenCentralController {
 
     //http://localhost:8080/flattire/api/versions?groupId=org.postgresql&artifactId=postgresql
     @GetMapping("/versions")
-    public List<MavenVersionResult> versions(
-            @RequestParam String groupId,
-            @RequestParam String artifactId
-    ) {
-        return mavenCentralService.getVersions(groupId, artifactId);
-    }
+    public List<MavenVersionResult> versions(@RequestParam String groupId, @RequestParam String artifactId) {return mavenCentralService.getVersions(groupId, artifactId);}
 }
